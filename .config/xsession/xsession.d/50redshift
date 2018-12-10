@@ -1,0 +1,17 @@
+#!/bin/sh
+#
+
+# Run entire process in a subshell not to slow down the session setup when
+# the network is not available for example
+(
+	[ -x $(which redshift) ] || exit 0
+
+	if [ -z "$LOCATION_LON" -o -z "$LOCATION_LAT" ]; then
+		location_xml=$(curl http://geoip.ubuntu.com/lookup)
+		LOCATION_LON=$(echo "$location_xml" | sed -n -e 's/.*<Longitude>\(.*\)<\/Longitude>.*/\1/p')
+		LOCATION_LAT=$(echo "$location_xml" | sed -n -e 's/.*<Latitude>\(.*\)<\/Latitude>.*/\1/p')
+	fi
+
+	[ -x $(which redshift) ] && redshift -l $LOCATION_LAT:$LOCATION_LON
+) &
+

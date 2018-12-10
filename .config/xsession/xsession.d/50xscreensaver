@@ -1,0 +1,17 @@
+#!/bin/sh
+
+xscreensaver -no-splash &
+
+# Watch XScreensaver status so that we can detect when the session 
+# has become idle
+(
+	# A restart loop in case our script or xscreensaver-command die for 
+	# some reason
+	while true; do
+		xscreensaver-command -watch | watch-xss-status
+		sleep 60
+	done
+) &
+
+# Lock the session after start, useful when you have autologin enabled
+xscreensaver-command -lock

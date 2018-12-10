@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Reference: https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html
+[ -z "$XSESSION_ROOT" ] && export XSESSION_ROOT=${XDG_CONFIG_HOME:-$HOME/.config}/xsession
+
+export PATH="$PATH:$XSESSION_ROOT/common"
+for script in $(run-parts --test $XSESSION_ROOT/xprofile.d); do
+	. $script xprofile
+done
+

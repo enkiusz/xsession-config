@@ -1,0 +1,18 @@
+#!/bin/sh
+
+action="$1"; shift
+
+if [ "$action" = "session-idle" ]; then
+	hint="true"
+elif [ "$action" = "session-active" ]; then
+	hint="false"
+else
+	echo "Unknown action code '$action'"
+	exit 1
+fi
+
+readonly session_path=$(busctl get-property org.freedesktop.login1 /org/freedesktop/login1/seat/$XDG_SEAT org.freedesktop.login1.Seat ActiveSession | while read sig id path; do echo ${path//\"/}; done)
+busctl call org.freedesktop.login1 "$session_path" org.freedesktop.login1.Session SetIdleHint b "$hint"
+
+echo "Session '$session_path' state idle hint = '$hint'"
+

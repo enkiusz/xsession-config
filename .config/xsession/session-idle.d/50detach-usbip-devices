@@ -1,0 +1,13 @@
+#!/bin/sh
+
+#
+# USBIP devices cause kernel to hang when suspending. Detach them when the session is idle
+#
+# Remember to enable the user to run these commands via sudo with NOPASSWD option.
+#
+sudo usbip port | grep 'Port [0-9]*:'| while read portline; do
+      port_id=$(echo $portline | python3 -c 'import re,sys; print(re.match("^Port\s(\d+):",sys.stdin.readline()).group(1))')
+      echo "Detaching USBIP port '$port_id'"
+      sudo usbip detach -p "$port_id"
+done
+

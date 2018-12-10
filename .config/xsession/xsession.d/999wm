@@ -1,0 +1,13 @@
+#!/bin/sh
+
+#
+# This file needs to be last and needs to exec() the
+# process which will keep the session open. This is usually
+# some kind of session manager (like xsm) or the window manager
+# like i3. 
+#
+# When the following process terminates the entire session will be
+# closed. By exec()ing the window manager here we allow a 
+# desktop environment specific hotkey to end the session.
+# 
+exec i3

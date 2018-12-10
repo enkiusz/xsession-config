@@ -1,0 +1,15 @@
+#!/bin/sh
+
+
+while read state timestamp; do
+    case $state in
+	LOCK|BLANK)
+	    run-parts -a session-idle $XSESSION_ROOT/session-idle.d
+	    ;;
+	UNBLANK)
+	    run-parts -a session-active $XSESSION_ROOT/session-active.d
+	    ;;
+	*)
+	    logger "Unkown XScreensaver state token received '$state' @ '$timestamp'"
+    esac
+done
